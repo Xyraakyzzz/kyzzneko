@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Kyxzz | Docs</title>
+    <link rel="icon" type="image/png" href="https://www.kyzzneko.zone.id/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/js/docs/style.css">
+  </head>
+  <body>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="particles-container" id="particles-container"></div>
+    <nav class="nav">
+      <div class="nav-logo">KYXZZ <em>API</em>
+      </div>
+      <div class="nav-r">
+        <button class="nbtn" id="tb" onclick="toggleTD()" title="Tema">
+          <i class="fas fa-circle-half-stroke"></i>
+        </button>
+      </div>
+    </nav>
+    <div class="td" id="td">
+      <div class="td-h">// TEMA</div>
+      <div class="to active" data-theme="dark" onclick="setTheme('dark')">
+        <div class="tsw" style="background:linear-gradient(135deg,#08081a,#7c3aed)"></div>🌙 Dark <i class="fas fa-check tck"></i>
+      </div>
+      <div class="to" data-theme="light" onclick="setTheme('light')">
+        <div class="tsw" style="background:linear-gradient(135deg,#f2f0ff,#6d28d9);border:1px solid #c4b5fd"></div>☀️ Light <i class="fas fa-check tck"></i>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <div class="vid-box" id="vid-box">
+          <div class="vid-loader active" id="vid-loader">
+            <div class="vid-load-fill"></div>
+          </div>
+          <video autoplay muted loop playsinline preload="none" id="hero-vid">
+            <source src="" type="video/mp4">
+          </video>
+        </div>
+        <div class="hero-body">
+          <div class="eyebrow">FREE REST API</div>
+          <div class="htitle">KYXZZAPI <br>
+            <span>DOCS</span>
+          </div>
+          <div class="hsub">Explore &amp; test live endpoints — file upload included.</div>
+          <div class="hbtns">
+            <a href="https://wa.me/6283178098872?text=Halo+saya+ingin+request+fitur+baru+untuk+NanzzAPI" target="_blank" class="btn-o">
+              <i class="fas fa-code"></i> Contact Dev </a>
+            <a href="https://wa.me/6283178098872?text=Halo+saya+ingin+request+fitur+baru+untuk+NanzzAPI" target="_blank" class="btn-o">
+              <i class="fas fa-bug"></i> Feedback </a>
+            <a href="https://whatsapp.com/channel/0029VbC1zvC4NVinIpJqza0h" target="_blank" class="btn-o">
+              <i class="fab fa-whatsapp"></i> Channel </a>
+            <a href="https://chat.whatsapp.com/Lhfb885LgC13hnMld07oOn" target="_blank" class="btn-o">
+              <i class="fas fa-users"></i> Group </a>
+          </div>
+        </div>
+      </div>
+      <div class="sec" style="margin-top:14px;animation:fadeUp .4s .1s ease both;">
+        <div class="srch">
+          <i class="fas fa-search srch-ic"></i>
+          <input type="text" id="srch-inp" class="srch-inp" placeholder="Cari endpoint..." oninput="onSearch()">
+        </div>
+      </div>
+      <div class="chips-wrap" id="chips-wrap"></div>
+      <div id="ep-panel" class="ep-panel hidden"></div>
+      <div id="search-panel" class="ep-panel hidden" style="margin-top:4px;"></div>
+      <footer> KYXZZAPI V2 &copy; 2026 · All rights reserved <br>
+        <a href="#">Docs</a> · <a href="https://wa.me/6283178098872?text=Halo+saya+ingin+request+fitur+baru+untuk+NanzzAPI">Support</a>
+      </footer>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src='/asstes/js/docs/index.js'></script>
+  </body>
+</html>
