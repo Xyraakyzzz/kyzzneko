@@ -2,7 +2,7 @@ const THEMES = ['dark','light'];
         function setTheme(name) {
             if (!THEMES.includes(name)) name = 'dark';
             document.documentElement.setAttribute('data-theme', name);
-            localStorage.setItem('kyxzzapi_theme', name);
+            localStorage.setItem('T', name);
             document.querySelectorAll('.theme-option').forEach(el => {
                 el.classList.toggle('active', el.dataset.theme === name);
             });
@@ -19,7 +19,7 @@ const THEMES = ['dark','light'];
             }
         });
         (function() {
-            const saved = localStorage.getItem('kyxzz_theme') || 'dark';
+            const saved = localStorage.getItem('T') || 'dark';
             document.documentElement.setAttribute('data-theme', saved);
             document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.theme-option').forEach(el => {
