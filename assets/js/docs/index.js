@@ -6,10 +6,35 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ─── VIDEO & THEME ─────────────────────────────────── */
-const VIDEO_DARK = "https://kappa.lol/2HLn5j";
-const VIDEO_LIGHT = "https://kappa.lol/uJWEb9";
+let VIDEO_DARK = "";
+let VIDEO_LIGHT = "";
 const vidLoader = document.getElementById('vid-loader');
 const video = document.getElementById('hero-vid');
+
+async function loadVideoConfig() {
+    try {
+        const res = await fetch(
+            window.location.origin + "/video.json?" + Date.now()
+        );
+
+        if (!res.ok) {
+            throw new Error("video.json not found");
+        }
+
+        const data = await res.json();
+
+        VIDEO_DARK = data.dark;
+        VIDEO_LIGHT = data.light;
+
+        const theme =
+            localStorage.getItem("n_t") || "dark";
+
+        updateVideo(theme);
+
+    } catch (err) {
+        console.error("Video config error:", err);
+    }
+}
 
 function updateVideo(n) {
     if (!video) return;
@@ -49,14 +74,29 @@ document.addEventListener('click', e => {
     if (!d.contains(e.target) && !b.contains(e.target)) d.classList.remove('open');
 });
 (() => {
-    const s = localStorage.getItem('n_t') || 'dark';
-    document.documentElement.setAttribute('data-theme', s);
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.to').forEach(e => e.classList.toggle('active', e.dataset.theme === s));
-        updateVideo(s);
-    });
-})();
+    const s =
+        localStorage.getItem('n_t') || 'dark';
 
+    document.documentElement
+        .setAttribute('data-theme', s);
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        () => {
+
+            document
+                .querySelectorAll('.to')
+                .forEach(e =>
+                    e.classList.toggle(
+                        'active',
+                        e.dataset.theme === s
+                    )
+                );
+
+            loadVideoConfig();
+        }
+    );
+})();
 /* ─── PARTIKEL UNGU ───────────────────────────────── */
 function createParticles() {
     const container = document.getElementById('particles-container');
