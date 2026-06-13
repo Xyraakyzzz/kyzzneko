@@ -267,7 +267,7 @@ function renderEP(ep, d = 0) {
         return ` <div class="fg">
   <div class="fl">
     <span class="fn">${p.name}</span>
-    <span class="ft">${p.type}</span>
+    <span class="ft">${p.filename || "input" }</span>
     <span class="fr">*</span>
     <span class="fh">${p.description||''}</span>
   </div>
