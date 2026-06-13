@@ -1,40 +1,8 @@
-/* ─── SPLASH SCREEN 2 DETIK ────────────────────────── */
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        document.getElementById('splash').classList.add('hidden');
-    }, 2000);
-});
-
 /* ─── VIDEO & THEME ─────────────────────────────────── */
-let VIDEO_DARK = "";
-let VIDEO_LIGHT = "";
+const VIDEO_DARK = "https://kappa.lol/2HLn5j";
+const VIDEO_LIGHT = "https://kappa.lol/uJWEb9";
 const vidLoader = document.getElementById('vid-loader');
 const video = document.getElementById('hero-vid');
-
-async function loadVideoConfig() {
-    try {
-        const res = await fetch(
-            window.location.origin + "/video.json?" + Date.now()
-        );
-
-        if (!res.ok) {
-            throw new Error("video.json not found");
-        }
-
-        const data = await res.json();
-
-        VIDEO_DARK = data.dark;
-        VIDEO_LIGHT = data.light;
-
-        const theme =
-            localStorage.getItem("n_t") || "dark";
-
-        updateVideo(theme);
-
-    } catch (err) {
-        console.error("Video config error:", err);
-    }
-}
 
 function updateVideo(n) {
     if (!video) return;
@@ -47,10 +15,6 @@ function updateVideo(n) {
     }
 }
 
-function safeId(str) {
-    return btoa(str || '').replace(/=/g, '');
-}
-
 video.addEventListener('loadstart', () => vidLoader.classList.add('active'));
 video.addEventListener('canplay', () => vidLoader.classList.remove('active'));
 video.addEventListener('waiting', () => vidLoader.classList.add('active'));
@@ -58,7 +22,7 @@ video.addEventListener('playing', () => vidLoader.classList.remove('active'));
 
 function setTheme(n) {
     document.documentElement.setAttribute('data-theme', n);
-    localStorage.setItem('n_t', n);
+    localStorage.setItem('T', n);
     document.querySelectorAll('.to').forEach(e => e.classList.toggle('active', e.dataset.theme === n));
     document.getElementById('td').classList.remove('open');
     updateVideo(n);
@@ -74,29 +38,14 @@ document.addEventListener('click', e => {
     if (!d.contains(e.target) && !b.contains(e.target)) d.classList.remove('open');
 });
 (() => {
-    const s =
-        localStorage.getItem('n_t') || 'dark';
-
-    document.documentElement
-        .setAttribute('data-theme', s);
-
-    document.addEventListener(
-        'DOMContentLoaded',
-        () => {
-
-            document
-                .querySelectorAll('.to')
-                .forEach(e =>
-                    e.classList.toggle(
-                        'active',
-                        e.dataset.theme === s
-                    )
-                );
-
-            loadVideoConfig();
-        }
-    );
+    const s = localStorage.getItem('T') || 'dark';
+    document.documentElement.setAttribute('data-theme', s);
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.to').forEach(e => e.classList.toggle('active', e.dataset.theme === s));
+        updateVideo(s);
+    });
 })();
+
 /* ─── PARTIKEL UNGU ───────────────────────────────── */
 function createParticles() {
     const container = document.getElementById('particles-container');
@@ -184,7 +133,8 @@ async function fetchData() {
         const r = await fetch("https://kyzznekoo.zone.id/base/config.json");
         if (!r.ok) throw new Error('HTTP ' + r.status);
 
-        apiTree = await r.json(); 
+        apiTree = await r.json(); // <-- langsung JSON kamu
+
         buildChips();
     } catch (e) {
         document.getElementById('chips-wrap').innerHTML =
@@ -278,73 +228,13 @@ function collectAll(data, arr) {
 }
 
 function renderEP(ep,d=0){
-  const id = safeId(ep.endpoint);
-
   const mc=ep.method==='GET'?'g':ep.method==='POST'?'po':'d';
-
   const params=(ep.params||[]).map(p=>{
-    if(p.type==='file')
-      return`<div class="fg"><div class="fl"><span class="fn">${p.name}</span><span class="ft">file</span><span class="fr">*</span><span class="fh">${p.description||'Upload'}</span></div><input type="file" class="fi" id="i-${id}-${p.name}"></div>`;
-
-    if(p.type==='select'){
-      const o=p.options.map(x=>`<option value="${x}">${x}</option>`).join('');
-      return`<div class="fg"><div class="fl"><span class="fn">${p.name}</span><span class="ft">select</span><span class="fr">*</span><span class="fh">${p.description||''}</span></div><select class="fi" id="i-${id}-${p.name}" onchange="upUrl('${id}')"><option value="" disabled selected>-- Pilih --</option>${o}</select></div>`;
-    }
-
-    return`<div class="fg"><div class="fl"><span class="fn">${p.name}</span><span class="ft">${p.type}</span><span class="fr">*</span><span class="fh">${p.description||''}</span></div><input type="text" class="fi" id="i-${id}-${p.name}" value="${p.default_value||''}" placeholder="${p.placeholder||p.name}" oninput="upUrl('${id}')"></div>`;
+    if(p.type==='file')return`<div class="fg"><div class="fl"><span class="fn">${p.name}</span><span class="ft">file</span><span class="fr">*</span><span class="fh">${p.description||'Upload'}</span></div><input type="file" class="fi" id="i-${ep.endpoint}-${p.name}"></div>`;
+    if(p.type==='select'){const o=p.options.map(x=>`<option value="${x}">${x}</option>`).join('');return`<div class="fg"><div class="fl"><span class="fn">${p.name}</span><span class="ft">select</span><span class="fr">*</span><span class="fh">${p.description||''}</span></div><select class="fi" id="i-${ep.endpoint}-${p.name}" onchange="upUrl('${ep.endpoint}')"><option value="" disabled selected>-- Pilih --</option>${o}</select></div>`;}
+    return`<div class="fg"><div class="fl"><span class="fn">${p.name}</span><span class="ft">${p.type}</span><span class="fr">*</span><span class="fh">${p.description||''}</span></div><input type="text" class="fi" id="i-${ep.endpoint}-${p.name}" value="${p.default_value||''}" placeholder="${p.placeholder||p.name}" oninput="upUrl('${ep.endpoint}')"></div>`;
   }).join('');
-
-  return`<div class="ep-item" id="ep-${id}" style="animation-delay:${d}s">
-    <div class="ep-hdr" onclick="toggleEP('ep-${id}')">
-      <span class="mb ${mc}">${ep.method}</span>
-      <span class="ep-name">${ep.name}</span>
-      <i class="fas fa-chevron-down ep-chv"></i>
-    </div>
-
-    <div class="ep-bw">
-      <div class="ep-b">
-        <div class="ep-bi">
-
-          <div class="ep-info">
-            <i class="fas fa-circle-info"></i>
-            <span>${ep.description}</span>
-          </div>
-
-          ${params}
-
-          <span class="ul">Request URL</span>
-
-          <div class="ub">
-            <span class="ut" id="u-${id}">${buildURL(ep)}</span>
-            <button class="icb" onclick="cpy(document.getElementById('u-${id}').textContent)">
-              <i class="fas fa-copy"></i>
-            </button>
-          </div>
-
-          <button class="xbtn" id="x-${id}" onclick="execAPI('${id}')">
-            <i class="fas fa-bolt"></i> Execute
-          </button>
-
-          <div class="rw" id="rw-${id}">
-            <div class="rh">
-              <div class="rd" id="rd-${id}"></div>
-              <span class="rs" id="rs-${id}">IDLE</span>
-              <div class="rhr">
-                <button class="icb" id="ra-${id}" onclick="cpyR('${id}')">
-                  <i class="fas fa-copy"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="rb" id="rb-${id}">
-              <pre class="rp">// Awaiting...</pre>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>`;
+  return`<div class="ep-item" id="ep-${ep.endpoint}" style="animation-delay:${d}s"><div class="ep-hdr" onclick="toggleEP('ep-${ep.endpoint}')"><span class="mb ${mc}">${ep.method}</span><span class="ep-name">${ep.name}</span><i class="fas fa-chevron-down ep-chv"></i></div><div class="ep-bw"><div class="ep-b"><div class="ep-bi"><div class="ep-info"><i class="fas fa-circle-info"></i><span>${ep.description}</span></div>${params}<span class="ul">Request URL</span><div class="ub"><span class="ut" id="u-${ep.endpoint}">${buildURL(ep)}</span><button class="icb" onclick="cpy(document.getElementById('u-${ep.endpoint}').textContent)"><i class="fas fa-copy"></i></button></div><button class="xbtn" id="x-${ep.endpoint}" onclick="execAPI('${ep.endpoint}')"><i class="fas fa-bolt"></i> Execute</button><div class="rw" id="rw-${ep.endpoint}"><div class="rh"><div class="rd" id="rd-${ep.endpoint}"></div><span class="rs" id="rs-${ep.endpoint}">IDLE</span><div class="rhr"><button class="icb" id="ra-${ep.endpoint}" onclick="cpyR('${ep.endpoint}')"><i class="fas fa-copy"></i></button></div></div><div class="rb" id="rb-${ep.endpoint}"><pre class="rp">// Awaiting...</pre></div></div></div></div></div></div>`;
 }
 window.toggleEP = id => {
     document.getElementById(id)?.classList.toggle('open');
@@ -401,7 +291,7 @@ window.upUrl = id => {
     const v = {};
     (ep.params || []).forEach(p => {
         if (p.type !== 'file') {
-            const e = document.getElementById(`i-${safeId(ep.endpoint)}-${p.name}`);
+            const e = document.getElementById(`i-${ep.endpoint}-${p.name}`);
             if (e?.value.trim()) v[p.name] = e.value.trim();
         }
     });
@@ -413,11 +303,11 @@ window.execAPI = async function(eid) {
 	console.log(eid)
     const ep = findEP(eid);
     if (!ep) return;
-    const btn = document.getElementById('x-' + safeId(eid)),
-        rs = document.getElementById('rs-' + safeId(eid)),
-        rd = document.getElementById('rd-' + safeId(eid)),
-        rb = document.getElementById('rb-' + safeId(eid)),
-        ra = document.getElementById('ra-' + safeId(eid));
+    const btn = document.getElementById('x-' + eid),
+        rs = document.getElementById('rs-' + eid),
+        rd = document.getElementById('rd-' + eid),
+        rb = document.getElementById('rb-' + eid),
+        ra = document.getElementById('ra-' + eid);
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Executing...';
     rs.className = 'rs';
@@ -432,7 +322,7 @@ window.execAPI = async function(eid) {
     if (!cu.startsWith('http')) cu = "https://kyzznekoo.zone.id" + eid;
     let hb = false;
     (ep.params || []).forEach(p => {
-        const el = document.getElementById(`i-${safeId(eid)}-${p.name}`);
+        const el = document.getElementById(`i-${eid}-${p.name}`);
         if (!el) return;
         if (p.type === 'file') {
             if (el.files?.length) {
