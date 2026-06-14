@@ -1,37 +1,7 @@
-export async function loadFirebase() {
-    if (!window.firebase) {
-        await new Promise((resolve, reject) => {
-            const s = document.createElement("script");
-            s.src = "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-            s.onload = resolve;
-            s.onerror = reject;
-            document.head.appendChild(s);
-        });
-
-        await new Promise((resolve, reject) => {
-            const s = document.createElement("script");
-            s.src = "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-            s.onload = resolve;
-            s.onerror = reject;
-            document.head.appendChild(s);
-        });
-
-        await new Promise((resolve, reject) => {
-            const s = document.createElement("script");
-            s.src = "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-            s.onload = resolve;
-            s.onerror = reject;
-            document.head.appendChild(s);
-        });
-    }
-
-loadFirebase();
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-if (!window.__firebaseApp) {
 const firebaseConfig = {
   apiKey: "AIzaSyD6gIg-u6a0ynHnRpz5ovtQiacj5NBrQZ4",
   authDomain: "x-mcjs-api.firebaseapp.com",
@@ -47,16 +17,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-
-window.__firebaseApp = firebase.initializeApp(firebaseConfig);
-        window.auth = firebase.auth();
-        window.db = firebase.database();
-}
-
-
-return {
-      app: window.__firebaseApp,
-      auth: window.auth,
-      db: window.db
-    };
-}
+export { app, auth, db };
