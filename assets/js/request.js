@@ -418,7 +418,7 @@ document.getElementById('submitReq').onclick = () => {
     const ApiLink = document.getElementById('reqLink').value.trim();
     const ApiFeat = document.getElementById('reqFeature').value.trim();
 
-    if (!apiName || !apiFeat) { window.showToast("Nama & Fitur wajib diisi!"); return; }
+    if (!apiName || !ApiFeat) { window.showToast("Nama & Fitur wajib diisi!"); return; }
 
     const lowerName = apiName.toLowerCase();
     const matchedRule = requestRules.find(rule =>
