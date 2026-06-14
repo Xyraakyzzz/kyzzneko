@@ -306,7 +306,7 @@ function isDuplicate(newName) {
     const now = Date.now();
 
     return existingRequestsCache.some(req => {
-        if (!req.ApiName) return false;
+        if (!req.apiName) return false;
         const cleanOld = req.apiName.toLowerCase().trim().replace(/[^a-z0-9]/g, "");
         const isNameMatch = cleanOld === cleanNew || cleanOld.includes(cleanNew) || cleanNew.includes(cleanOld);
 
@@ -418,7 +418,7 @@ document.getElementById('submitReq').onclick = () => {
     const ApiLink = document.getElementById('reqLink').value.trim();
     const ApiFeat = document.getElementById('reqFeature').value.trim();
 
-    if (!apiName || !ApiFeat) { window.showToast("Nama & Fitur wajib diisi!"); return; }
+    if (!apiName || !apiFeat) { window.showToast("Nama & Fitur wajib diisi!"); return; }
 
     const lowerName = apiName.toLowerCase();
     const matchedRule = requestRules.find(rule =>
@@ -426,14 +426,14 @@ document.getElementById('submitReq').onclick = () => {
     );
 
     if (matchedRule) {
-        showValidatorModal(matchedRule, ApiName);
+        showValidatorModal(matchedRule, apiName);
         return;
     }
 
-    if (isDuplicate(ApiName)) {
+    if (isDuplicate(apiName)) {
         window.showToast("Api Sudah Pernah Di request, Tunggu Admin Upload");
         window.switchReqTab('list');
-        document.getElementById('reqSearch').value = ApiName;
+        document.getElementById('reqSearch').value = apiName;
         window.filterRequests();
         return;
     }
