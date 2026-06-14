@@ -166,21 +166,32 @@ body.modal-open {
         display: flex; flex-direction: column; overflow: hidden;
     }
 
-    /* ===== MODAL CENTER FIX (SAFE ADD-ON ONLY) ===== */
+/* ===== FIX MODAL CENTER + NO CUT HEADER ===== */
 
 #requestModal {
-    align-items: center !important;
+    align-items: flex-start !important; /* penting: jangan center vertikal full */
     justify-content: center !important;
+    overflow-y: auto !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
 }
 
+/* modal box tetap di tengah horizontal */
 #requestModal > div {
-    margin: auto !important;
+    margin: 0 auto !important;
     transform: none !important;
 }
 
-/* optional: jaga scroll tetap normal */
-body.modal-open {
+/* pastikan header tidak ke-clip */
+#requestModal > div {
+    max-height: 90vh;
     overflow: hidden;
+}
+
+/* area isi yang boleh scroll */
+.req-view-container {
+    overflow-y: auto !important;
+    max-height: calc(90vh - 120px);
 }
 `;
 document.head.appendChild(styleRequest);
