@@ -36,7 +36,6 @@
             color: #fff;
         }
 
-        /* --- Ambient Grid Background (No Glow) --- */
         .auth-container {
             background: var(--bg-deep) !important;
             width: 100% !important;
@@ -54,7 +53,6 @@
             background-position: center !important;
         }
 
-        /* Hide artifacts */
         .auth-container::before, .auth-container::after, .glow-orb, .bg-mesh, .bg-grid, .custom-brand, .hero-section, .hero-card, .login-footer, .custom-footer, div[style*="border-top"], .step-list, .status-pill {
             display: none !important;
         }
@@ -110,7 +108,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         }
 
-        /* --- Typography --- */
         #pageTitle {
             font-family: var(--font-main) !important;
             font-weight: 800 !important;
@@ -132,7 +129,6 @@
             max-width: 340px !important;
         }
 
-        /* Turnstile Container */
         #turnstile-widget {
             margin-bottom: 24px !important;
             min-height: 65px;
@@ -141,7 +137,6 @@
             transform: scale(0.9);
         }
 
-        /* --- Social Button --- */
         .social-group {
             width: 100% !important;
             display: flex !important;
@@ -224,10 +219,15 @@
                     window.turnstile.render('#turnstile-widget', {
                         sitekey: '0x4AAAAAADkSTSJOUh2xTwNm',
                         theme: 'dark',
-                        callback: function(token) {
-                            const btn = document.getElementById('btnGoogle');
-                            if(btn) btn.classList.add('verified');
-                        },
+                    callback: function(token) {
+                alert("TURNSTILE OK:", token);
+                   const btn = document.getElementById('btnGoogle');
+                     if (btn) {
+                        btn.classList.add('verified');
+                        btn.disabled = false;
+                      }
+                      window.turnstileToken = token;
+                     },
                     });
                 }
             }, 100);
