@@ -255,6 +255,7 @@ const provider = new GoogleAuthProvider();
              try {
               const result = await signInWithPopup(auth, provider);
               console.log("LOGIN SUCCESS:", result.user);
+               window.location.href = "/";
               } catch (err) {
              console.error("LOGIN ERROR:", err);
            }
