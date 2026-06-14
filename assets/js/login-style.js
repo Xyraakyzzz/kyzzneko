@@ -219,8 +219,7 @@
                     window.turnstile.render('#turnstile-widget', {
                         sitekey: '0x4AAAAAADkSTSJOUh2xTwNm',
                         theme: 'dark',
-                    callback: function(token) {
-                alert("TURNSTILE OK:", token);
+                callback: function(token) {
                 console.log("TURNSTILE OK:", token);
                    const btn = document.getElementById('btnGoogle');
                      if (btn) {
@@ -240,19 +239,22 @@
                 btn.innerHTML = `<img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"> Continue with Google`;
             }
         }
-    }
 
+        const btn = document.getElementById('btnGoogle');
 
-    document.getElementById('btnGoogle').addEventListener('click', async () => {
-    try {
-        const result = await signInWithPopup(auth, provider);
-        console.log("LOGIN SUCCESS:", result.user);
-    } catch (err) {
-        console.error("LOGIN ERROR:", err);
+         if (btn && !btn.dataset.bound) {
+          btn.dataset.bound = "true";
+
+         btn.addEventListener('click', async () => {
+             try {
+              const result = await signInWithPopup(auth, provider);
+              console.log("LOGIN SUCCESS:", result.user);
+              } catch (err) {
+             console.error("LOGIN ERROR:", err);
+           }
+       });
+     }
     }
-});
 
     render();
-    const interval = setInterval(render, 100);
-    setTimeout(() => clearInterval(interval), 5000);
 })();
