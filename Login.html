@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style id="Kyxzz-v13-theme">
+      @import url(\'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap\');
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --accent: #7c3aed;
+        --bg: #000000;
+        --gray: #161616;
+        --border: rgba(255, 255, 255, 0.08);
+      }
+
+      body {
+        background: var(--bg);
+        color: #fff;
+        font-family: \'Plus Jakarta Sans\', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .auth-container {
+        display: flex;
+        min-height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .auth-container::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+        top: -100px;
+        left: -100px;
+        border-radius: 50%;
+        z-index: 0;
+        filter: blur(60px);
+        animation: floatBlob 10s infinite alternate;
+      }
+
+      .auth-container::after {
+        content: "";
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        bottom: -50px;
+        right: -50px;
+        border-radius: 50%;
+        z-index: 0;
+        filter: blur(60px);
+        animation: floatBlob 8s infinite alternate-reverse;
+      }
+
+      @keyframes floatBlob {
+        0% {
+          transform: translate(0, 0);
+        }
+
+        100% {
+          transform: translate(30px, 30px);
+        }
+      }
+
+      .hero-section {
+        flex: 1.2;
+        display: none;
+        padding: 24px;
+        z-index: 1;
+      }
+
+      @media (min-width: 1024px) {
+        .hero-section {
+          display: flex;
+        }
+      }
+
+      .hero-card {
+        width: 100%;
+        border-radius: 32px;
+        background: radial-gradient(circle at 30% 20%, #4c1d95 0%, #000000 70%);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      }
+
+      .hero-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.12;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E");
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .step-pill {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 12px;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .step-pill.active {
+        background: #fff;
+        color: #000;
+        transform: translateX(10px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      }
+
+      .step-num {
+        width: 24px;
+        height: 24px;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .form-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 30px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .form-wrapper {
+        width: 100%;
+        max-width: 400px;
+        z-index: 5;
+        text-align: center;
+      }
+
+      .social-group {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 28px;
+        width: 100%;
+      }
+
+      .social-btn {
+        height: 56px;
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        color: #000;
+        font-size: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -1px rgba(255, 255, 255, 0.06);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .social-btn::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: 0.5s;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.2);
+      }
+
+      .social-btn:hover::after {
+        left: 100%;
+      }
+
+      .social-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .fade {
+        animation: f 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      @keyframes f {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+          filter: blur(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      .error-box {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        margin-bottom: 20px;
+        display: none;
+        text-align: center;
+        font-weight: 600;
+        animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        backdrop-filter: blur(10px);
+      }
+
+      @keyframes shake {
+
+        10%,
+        90% {
+          transform: translate3d(-1px, 0, 0);
+        }
+
+        20%,
+        80% {
+          transform: translate3d(2px, 0, 0);
+        }
+
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, 0, 0);
+        }
+
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0);
+        }
+      }
+
+      .welcome-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #1e1e1e 0%, #111 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+
+      .welcome-icon::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 24px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .text-gradient {
+        background: linear-gradient(to right, #fff, #9ca3af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="/assets/js/login-style.js"></script>
+    <div class="auth-container" id="authContainer" style="display: none;">
+      <div class="hero-section">
+        <div class="hero-card">
+          <div class="hero-content">
+            <div style="font-weight:900; font-size:24px; margin-bottom:60px; display:flex; align-items:center; gap:12px">
+              <img src="/icon.png" style="width:40px; border-radius:12px; box-shadow: 0 10px 20px rgba(0,0,0,0.3)"> BerryModApk
+            </div>
+            <h1 style="font-size: 54px; font-weight: 800; line-height: 1.05; margin-bottom: 24px; letter-spacing: -2px;">Welcome Back <br> My Member. </h1>
+            <p style="color: rgba(255,255,255,0.5); font-size: 17px; margin-bottom: 50px; line-height: 1.6; max-width: 400px;">Rasakan pengalaman bersama Admin dalam chat Global bersama semua Member.</p>
+            <div class="step-list">
+              <div class="step-pill" id="step1">
+                <div class="step-num">1</div>Create Account
+              </div>
+              <div class="step-pill active" id="step2">
+                <div class="step-num">2</div>Login to Your Account
+              </div>
+              <div class="step-pill">
+                <div class="step-num">3</div>Start chatting
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-section fade">
+        <div class="form-wrapper">
+          <div id="errorNotice" class="error-box"></div>
+          <div class="welcome-icon">
+            <img src="/icon.png" style="width:40px; border-radius:12px;">
+          </div>
+          <h2 id="pageTitle" class="text-gradient" style="font-size: 36px; font-weight: 800; margin-bottom: 12px; letter-spacing: -1.5px;">Welcome Back!</h2>
+          <p style="color: #9ca3af; font-size: 15px; margin-bottom: 40px; font-weight: 500; line-height: 1.6;">Join our community to access premium mods. <br>
+            <span style="color: rgba(255,255,255,0.4); font-size: 13px;">Secure login powered by Google</span>
+          </p>
+          <div class="social-group">
+            <button class="social-btn" id="btnGoogle">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="24">
+              <span>Continue with Google</span>
+            </button>
+          </div>
+          <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <p style="font-size: 11px; color: rgba(255,255,255,0.2); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Protected by Berry Security</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src='/assets/db/firebase.js'></script>
+  </body>
+</html>
