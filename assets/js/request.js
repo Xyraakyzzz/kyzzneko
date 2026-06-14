@@ -169,14 +169,12 @@ body.modal-open {
 /* ===== FIX MODAL CENTER + NO CUT HEADER ===== */
 
 #requestModal {
-    align-items: flex-start !important; /* penting: jangan center vertikal full */
+    align-items: flex-start !important;
     justify-content: center !important;
+    padding-top: 60px !important;
     overflow-y: auto !important;
-    padding-top: 40px !important;
-    padding-bottom: 40px !important;
 }
 
-/* modal box tetap di tengah horizontal */
 #requestModal > div {
     margin: 0 auto !important;
     transform: none !important;
