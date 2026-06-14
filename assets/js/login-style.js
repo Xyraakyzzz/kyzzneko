@@ -221,6 +221,7 @@
                         theme: 'dark',
                     callback: function(token) {
                 alert("TURNSTILE OK:", token);
+                console.log("TURNSTILE OK:", token);
                    const btn = document.getElementById('btnGoogle');
                      if (btn) {
                         btn.classList.add('verified');
