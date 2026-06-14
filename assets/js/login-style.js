@@ -242,6 +242,16 @@
         }
     }
 
+
+    document.getElementById('btnGoogle').addEventListener('click', async () => {
+    try {
+        const result = await signInWithPopup(auth, provider);
+        console.log("LOGIN SUCCESS:", result.user);
+    } catch (err) {
+        console.error("LOGIN ERROR:", err);
+    }
+});
+
     render();
     const interval = setInterval(render, 100);
     setTimeout(() => clearInterval(interval), 5000);
