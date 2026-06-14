@@ -222,7 +222,7 @@
                 if (window.turnstile) {
                     clearInterval(checkTurnstile);
                     window.turnstile.render('#turnstile-widget', {
-                        sitekey: '0x4AAAAAACAsarOKOhlQi4jw',
+                        sitekey: '0x4AAAAAADkSTSJOUh2xTwNm',
                         theme: 'dark',
                         callback: function(token) {
                             const btn = document.getElementById('btnGoogle');
