@@ -29,6 +29,48 @@ fetch('/User/Chat/keyword.json')
 
 const styleRequest = document.createElement('style');
 styleRequest.innerHTML = `
+.hidden {
+    display: none !important;
+}
+
+.animate-in {
+    animation: fadeIn 0.25s ease-out;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.kyxzz-toast {
+    z-index: 30000;
+}
+
+.req-input-small:focus,
+.req-select-small:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+#requestModal > div {
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    #requestModal > div {
+        width: 95%;
+        border-radius: 10px;
+    }
+
+    .req-view-container {
+        max-height: 60vh;
+    }
+}
+
+.btn-req-send:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
     #requestModal { z-index: 10000; background: rgba(0, 0, 0, 0.96); backdrop-filter: blur(12px); }
     #requestModal > div {
         background: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.08);
