@@ -165,6 +165,23 @@ body.modal-open {
         max-width: 380px; width: 90%;
         display: flex; flex-direction: column; overflow: hidden;
     }
+
+    /* ===== MODAL CENTER FIX (SAFE ADD-ON ONLY) ===== */
+
+#requestModal {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#requestModal > div {
+    margin: auto !important;
+    transform: none !important;
+}
+
+/* optional: jaga scroll tetap normal */
+body.modal-open {
+    overflow: hidden;
+}
 `;
 document.head.appendChild(styleRequest);
 
