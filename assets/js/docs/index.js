@@ -12,6 +12,414 @@ const video = document.getElementById('hero-vid');
   document.getElementById('gc').href = about.gc;
 })();
 
+function injectTwilightUI() {
+  if (document.getElementById("tw-ui-style")) return;
+
+  const style = document.createElement("style");
+  style.id = "tw-ui-style";
+
+  style.textContent = `
+  :root {
+    --bg: #0b0f17;
+    --card: rgba(18, 22, 35, 0.72);
+    --stroke: rgba(255,255,255,0.06);
+    --glow: rgba(120, 140, 255, 0.35);
+    --text: #e7eaf3;
+    --muted: rgba(255,255,255,0.55);
+    --ok: #4dff9a;
+    --err: #ff6a6a;
+    --blue: #6aa6ff;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* ================= EP CARD ================= */
+  .ep-item {
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    backdrop-filter: blur(14px);
+    transition: 0.25s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  .ep-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(120,140,255,0.25);
+    box-shadow:
+      0 0 0 1px rgba(120,140,255,0.12),
+      0 18px 40px rgba(0,0,0,0.45);
+  }
+
+  .ep-hdr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+  }
+
+  .mb {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.6px;
+  }
+
+  .mb.g { background: rgba(0,255,140,0.12); color: var(--ok); }
+  .mb.po { background: rgba(120,140,255,0.12); color: var(--blue); }
+  .mb.d { background: rgba(255,80,80,0.12); color: var(--err); }
+
+  .ep-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ep-chv {
+    opacity: 0.5;
+    transition: 0.25s ease;
+  }
+
+  .ep-item.open .ep-chv {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+
+  .ep-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.3s ease;
+    padding: 0 16px;
+  }
+
+  .ep-item.open .ep-body {
+    max-height: 700px;
+    padding-bottom: 16px;
+  }
+
+  /* ================= STATUS (ONLY NUMBER) ================= */
+  .rs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 28px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+
+  .rs.ok {
+    background: rgba(0,255,140,0.12);
+    color: var(--ok);
+    border: 1px solid rgba(0,255,140,0.25);
+  }
+
+  .rs.err {
+    background: rgba(255,80,80,0.12);
+    color: var(--err);
+    border: 1px solid rgba(255,80,80,0.25);
+  }
+
+  /* ================= RESPONSE ================= */
+  .rp {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.25);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    overflow: auto;
+  }
+
+  /* ================= MEDIA ================= */
+  .r-media {
+    max-width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .r-audio {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .r-pdf {
+    width: 100%;
+    height: 300px;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .r-binary {
+    padding: 14px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .r-dl {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 8px;
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 12px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  `;
+
+  document.head.appendChild(style);
+}
+
+const EP_STYLE = (() => {
+  if (document.getElementById("tw-ep-style")) return;
+
+  const style = document.createElement("style");
+  style.id = "tw-ep-style";
+
+  style.textContent = `
+    .ep-item {
+      background: rgba(20, 20, 28, 0.85);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: 0.2s ease;
+      animation: fadeUp .3s ease both;
+    }
+
+    .ep-item:hover {
+      border-color: rgba(120, 140, 255, 0.35);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      transform: translateY(-1px);
+    }
+
+    .ep-hdr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mb {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+    }
+
+    .mb.g { background: rgba(0, 255, 120, 0.12); color: #4dff9a; }
+    .mb.po { background: rgba(80, 140, 255, 0.12); color: #6aa6ff; }
+    .mb.d { background: rgba(255, 80, 80, 0.12); color: #ff6a6a; }
+
+    .ep-name {
+      flex: 1;
+      font-size: 13px;
+      color: #fff;
+      opacity: 0.9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ep-chv {
+      font-size: 12px;
+      opacity: 0.5;
+      transition: 0.25s ease;
+    }
+
+    .ep-item.open .ep-chv {
+      transform: rotate(180deg);
+      opacity: 0.9;
+    }
+
+    .ep-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+      padding: 0 14px;
+    }
+
+    .ep-item.open .ep-body {
+      max-height: 500px;
+      padding-bottom: 14px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  `;
+
+  document.head.appendChild(style);
+})()
+
+const TWILIGHT_CARD_STYLE = (() => {
+  const style = document.createElement("style");
+  style.textContent = `
+  .tw-card {
+    background: rgba(20, 20, 28, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    transition: 0.2s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .tw-card:hover {
+    border-color: rgba(120, 140, 255, 0.35);
+    box-shadow: 0 0 0 1px rgba(120, 140, 255, 0.15),
+                0 10px 30px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .tw-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .tw-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .fn {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .ft {
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  .fr {
+    color: #ff4d4d;
+    font-weight: bold;
+  }
+
+  .tw-desc {
+    font-size: 12px;
+    opacity: 0.7;
+    margin: 6px 0 10px 0;
+  }
+
+  .tw-input-wrap {
+    margin-top: 6px;
+  }
+
+  .tw-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+    transition: 0.2s;
+  }
+
+  .tw-input:focus {
+    border-color: rgba(120, 140, 255, 0.6);
+    box-shadow: 0 0 0 3px rgba(120, 140, 255, 0.15);
+  }
+  `;
+
+  document.head.appendChild(style);
+
+  return {
+    mounted: true,
+    name: "twilight-card-style"
+  };
+})();
+
+
+const CHIP_STYLE = (() => {
+  if (document.getElementById("tw-chip-style")) return;
+
+  const style = document.createElement("style");
+  style.id = "tw-chip-style";
+
+  style.textContent = `
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      margin: 4px;
+      border-radius: 999px;
+      background: rgba(25, 25, 35, 0.75);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.2s ease;
+      backdrop-filter: blur(8px);
+      animation: fadeUp .3s ease both;
+    }
+
+    .chip:hover {
+      transform: translateY(-2px);
+      border-color: rgba(120, 140, 255, 0.4);
+      box-shadow:
+        0 6px 18px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(120, 140, 255, 0.15);
+    }
+
+    .chip i {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .chip-count {
+      opacity: 0.55;
+      font-size: 10px;
+      margin-left: 6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
+
 function updateVideo(n) {
     if (!video) return;
     const src = n === 'light' ? VIDEO_LIGHT : VIDEO_DARK;
@@ -46,7 +454,7 @@ document.addEventListener('click', e => {
     if (!d.contains(e.target) && !b.contains(e.target)) d.classList.remove('open');
 });
 (() => {
-    setTimeout(()=>document.getElementById('loader')?.classList.add('out'),900);
+    setTimeout(()=>document.getElementById('loader')?.classList.add('out'),700);
     const s = localStorage.getItem('T') || 'dark';
     document.documentElement.setAttribute('data-theme', s);
     document.addEventListener('DOMContentLoaded', () => {
@@ -70,8 +478,6 @@ function createParticles() {
         container.appendChild(particle);
     }
 }
-document.addEventListener('DOMContentLoaded', createParticles);
-
 
 let apiTree = null,
     responseCache = {},
@@ -157,24 +563,33 @@ async function fetchData() {
 }
 
 function buildChips() {
-    const w = document.getElementById('chips-wrap');
-    if (!apiTree?.tags) return;
+  const w = document.getElementById("chips-wrap");
+  if (!w || !apiTree?.tags) return;
 
-    const folders = Object.keys(apiTree.tags);
+  // inject style sekali
+  CHIP_STYLE;
 
-    w.innerHTML = folders.map((name, i) => {
-        const count = apiTree.tags[name]?.length || 0;
+  const folders = Object.keys(apiTree.tags);
 
-        return `
-        <div class="chip"
-            data-id="${name}"
-            onclick="selectChip('${name}')"
-            style="animation:fadeUp .3s ${i * .04}s ease both">
-            <i class="fas ${getFI(name)}"></i>
-            ${name}
-            <span style="opacity:.55;font-size:.52rem">${count}</span>
-        </div>`;
-    }).join('');
+  const html = folders.map((name, i) => {
+    const count = apiTree.tags?.[name]?.length || 0;
+    const icon = getFI(name);
+
+    return `
+      <div
+        class="chip"
+        data-id="${name}"
+        onclick="selectChip('${name}')"
+        style="animation-delay:${i * 0.04}s"
+      >
+        <i class="fas ${icon}"></i>
+        <span>${name}</span>
+        <span class="chip-count">${count}</span>
+      </div>
+    `;
+  }).join("");
+
+  w.innerHTML = html;
 }
 
 function selectChip(id) {
@@ -240,152 +655,109 @@ function collectAll(data, arr) {
 }
 
 function renderEP(ep, d = 0) {
-    const endpointId = c(ep.endpoint);
-
-    const methodClass =
-        ep.method === 'GET'
-            ? 'http-method-get-badge'
-            : ep.method === 'POST'
-            ? 'http-method-post-badge'
-            : 'http-method-default-badge';
-
+    const mc = ep.method === 'GET' ? 'g' : ep.method === 'POST' ? 'po' : 'd';
     const params = (ep.params || []).map(p => {
-        const fieldId = `input-field-${endpointId}-${p.name}`;
-        const description = p.description || '';
-
-        const labelBlock = `
-<div class="api-parameter-field-label-wrapper">
-  <span class="api-parameter-field-name">${p.name}</span>
-  <span class="api-parameter-field-type">${p.type || 'string'}</span>
-  <span class="api-parameter-required-indicator">*</span>
-  <span class="api-parameter-field-description">${description}</span>
+        if (p.type === 'file') return ` <div class="fg">
+  <div class="fl">
+    <span class="fn">${p.name}</span>
+    <span class="ft">file</span>
+    <span class="fr">*</span>
+    <span class="fh">${p.description||'Upload'}</span>
+  </div>
+  <input type="file" class="fi" id="i-${c(ep.endpoint)}-${p.name}">
 </div>`;
-
-        if (p.type === 'file') {
-            return `
-<div class="api-parameter-field-container">
-  ${labelBlock}
-  <input type="file"
-    class="api-parameter-file-input-element"
-    id="${fieldId}">
-</div>`;
-        }
-
         if (p.type === 'select') {
-            const options = (p.options || [])
-                .map(x => `<option value="${x}">${x}</option>`)
-                .join('');
-
-            return `
-<div class="api-parameter-field-container">
-  ${labelBlock}
-  <select
-    class="api-parameter-select-input-element"
-    id="${fieldId}"
-    onchange="upUrl('${ep.endpoint}')">
-    <option value="" disabled selected>-- select option --</option>
-    ${options}
+            const o = p.options.map(x => ` <option value="${x}">${x}</option>`).join('');
+            return ` <div class="fg">
+  <div class="fl">
+    <span class="fn">${p.name}</span>
+    <span class="ft">select</span>
+    <span class="fr">*</span>
+    <span class="fh">${p.description||"X"}</span>
+  </div>
+  <select class="fi" id="i-${c(ep.endpoint)}-${p.name}" onchange="upUrl('${ep.endpoint}')">
+    <option value="" disabled selected>-- Pilih --</option>${o}
   </select>
 </div>`;
         }
+        return ` 
+<div class="tw-card fg" data-endpoint="${ep.endpoint}">
+  
+  <!-- HEADER -->
+  <div class="tw-card-header fl">
+    <div class="tw-title-wrap">
+      <span class="fn text-white">${p.name}</span>
+      <span class="ft text-gray">${p.filename || "input"}</span>
+    </div>
 
-        return `
-<div class="api-parameter-field-container">
-  ${labelBlock}
-  <input type="text"
-    class="api-parameter-text-input-element"
-    id="${fieldId}"
-    value="${p.default_value || ''}"
-    placeholder="${p.placeholder || p.name}"
-    oninput="upUrl('${ep.endpoint}')">
+    <span class="fr tw-required">*</span>
+  </div>
+
+  <!-- DESCRIPTION -->
+  ${p.description ? `
+    <div class="fh text-muted tw-desc">
+      ${p.description}
+    </div>
+  ` : ""}
+
+  <!-- INPUT -->
+  <div class="tw-input-wrap">
+    <input 
+      type="text"
+      class="fi tw-input"
+      id="i-${c(ep.endpoint)}-${p.name}"
+      value="${p.default_value || ''}"
+      placeholder="${p.placeholder || p.name}"
+      oninput="upUrl('${ep.endpoint}')"
+    />
+  </div>
+
 </div>`;
     }).join('');
 
-    return `
-<div class="api-endpoint-card-container" id="endpoint-card-${endpointId}" style="animation-delay:${d}s">
+    return `   <div class="ep-item" id="ep-${c(ep.endpoint)}" style="animation-delay:${d}s">
 
-  <!-- HEADER -->
-  <div class="api-endpoint-card-header-section"
-       onclick="toggleEP('endpoint-card-${endpointId}')">
+      <div class="ep-hdr" onclick="toggleEP('ep-${c(ep.endpoint)}')">
+        <span class="mb ${mc}">${ep.method}</span>
+        <span class="ep-name">${ep.name}</span>
+        <i class="fas fa-chevron-down ep-chv"></i>
+      </div>
 
-    <span class="${methodClass}">${ep.method}</span>
-
-    <span class="api-endpoint-title-text">
-      ${ep.name}
-    </span>
-
-    <i class="fas fa-chevron-down api-endpoint-expand-icon"></i>
-  </div>
-
-  <!-- BODY -->
-  <div class="api-endpoint-card-body-wrapper">
-
-    <div class="api-endpoint-information-block">
-      <i class="fas fa-circle-info"></i>
-      <span>${ep.filename}</span>
-    </div>
-
-    <!-- PARAMETERS -->
-    <div class="api-endpoint-parameters-container">
-      ${params}
-    </div>
-
-    <!-- REQUEST URL -->
-    <div class="api-request-url-section-title">
-      Request URL
-    </div>
-
-    <div class="api-request-url-box-container">
-      <span class="api-request-url-text"
-            id="request-url-text-${endpointId}">
-        ${buildURL(ep)}
-      </span>
-
-      <button class="api-request-url-copy-button"
-        onclick="cpy(document.getElementById('request-url-text-${endpointId}').textContent)">
-        <i class="fas fa-copy"></i>
-      </button>
-    </div>
-
-    <!-- EXECUTE -->
-    <button class="api-execute-request-button"
-      id="execute-button-${endpointId}"
-      onclick="execAPI('${ep.endpoint}')">
-
-      <i class="fas fa-bolt"></i>
-      Execute Request
-    </button>
-
-    <!-- RESPONSE -->
-    <div class="api-response-container-wrapper"
-         id="response-wrapper-${endpointId}">
-
-      <div class="api-response-header-bar">
-
-        <div class="api-response-status-indicator"
-             id="response-status-${endpointId}"></div>
-
-        <span class="api-response-status-text"
-              id="response-state-${endpointId}">
-          IDLE
-        </span>
-
-        <div class="api-response-actions-right">
-          <button class="api-response-copy-button"
-            onclick="cpyR('${ep.endpoint}')">
+      <div class="ep-body">
+        <!-- nanti isi params / form / response di sini -->
+        ${ep.description ? `<div style="opacity:.7;font-size:12px;margin-top:6px">${ep.description}</div>` : ''}
+      </div>
+  <div class="ep-bw">
+    <div class="ep-b">
+      <div class="ep-bi">
+        <div class="ep-info">
+          <i class="fas fa-circle-info"></i>
+          <span>${ep.filename}</span>
+        </div>${params} <span class="ul">Request URL</span>
+        <div class="ub">
+          <span class="ut" id="u-${c(ep.endpoint)}">${buildURL(ep)}</span>
+          <button class="icb" onclick="cpy(document.getElementById('u-${ep.endpoint}').textContent)">
             <i class="fas fa-copy"></i>
           </button>
         </div>
-
+        <button class="xbtn" id="x-${c(ep.endpoint)}" onclick="execAPI('${ep.endpoint}')">
+          <i class="fas fa-bolt"></i> Execute </button>
+        <div class="rw" id="rw-${c(ep.endpoint)}">
+          <div class="rh">
+            <div class="rd" id="rd-${c(ep.endpoint)}"></div>
+            <span class="rs" id="rs-${c(ep.endpoint)}">IDLE</span>
+            <div class="rhr">
+              <button class="icb" id="ra-${c(ep.endpoint)}" onclick="cpyR('${ep.endpoint}')">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </div>
+          <div class="rb" id="rb-${c(ep.endpoint)}">
+            <pre class="rp">// Awaiting...</pre>
+          </div>
+        </div>
       </div>
-
-      <div class="api-response-body-container"
-           id="response-body-${endpointId}">
-        <pre class="api-response-placeholder-text">// Awaiting response...</pre>
-      </div>
-
     </div>
-
   </div>
 </div>`;
 }
@@ -600,4 +972,9 @@ window.dlMedia = function(id) {
     showToast('Download started!');
 };
 
-document.addEventListener('DOMContentLoaded', fetchData);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchData();
+    injectTwilightUI();
+    createParticles();
+    TWILIGHT_CARD_STYLE;
+});
