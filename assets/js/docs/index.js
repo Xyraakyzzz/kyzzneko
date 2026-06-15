@@ -46,6 +46,7 @@ document.addEventListener('click', e => {
     if (!d.contains(e.target) && !b.contains(e.target)) d.classList.remove('open');
 });
 (() => {
+    setTimeout(()=>document.getElementById('loader')?.classList.add('out'),900);
     const s = localStorage.getItem('T') || 'dark';
     document.documentElement.setAttribute('data-theme', s);
     document.addEventListener('DOMContentLoaded', () => {
