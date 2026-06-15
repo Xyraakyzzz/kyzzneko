@@ -239,79 +239,152 @@ function collectAll(data, arr) {
 }
 
 function renderEP(ep, d = 0) {
-    const mc = ep.method === 'GET' ? 'g' : ep.method === 'POST' ? 'po' : 'd';
+    const endpointId = c(ep.endpoint);
+
+    const methodClass =
+        ep.method === 'GET'
+            ? 'http-method-get-badge'
+            : ep.method === 'POST'
+            ? 'http-method-post-badge'
+            : 'http-method-default-badge';
+
     const params = (ep.params || []).map(p => {
-        if (p.type === 'file') return ` <div class="fg">
-  <div class="fl">
-    <span class="fn">${p.name}</span>
-    <span class="ft">file</span>
-    <span class="fr">*</span>
-    <span class="fh">${p.description||'Upload'}</span>
-  </div>
-  <input type="file" class="fi" id="i-${c(ep.endpoint)}-${p.name}">
+        const fieldId = `input-field-${endpointId}-${p.name}`;
+        const description = p.description || '';
+
+        const labelBlock = `
+<div class="api-parameter-field-label-wrapper">
+  <span class="api-parameter-field-name">${p.name}</span>
+  <span class="api-parameter-field-type">${p.type || 'string'}</span>
+  <span class="api-parameter-required-indicator">*</span>
+  <span class="api-parameter-field-description">${description}</span>
 </div>`;
+
+        if (p.type === 'file') {
+            return `
+<div class="api-parameter-field-container">
+  ${labelBlock}
+  <input type="file"
+    class="api-parameter-file-input-element"
+    id="${fieldId}">
+</div>`;
+        }
+
         if (p.type === 'select') {
-            const o = p.options.map(x => ` <option value="${x}">${x}</option>`).join('');
-            return ` <div class="fg">
-  <div class="fl">
-    <span class="fn">${p.name}</span>
-    <span class="ft">select</span>
-    <span class="fr">*</span>
-    <span class="fh">${p.description||"X"}</span>
-  </div>
-  <select class="fi" id="i-${c(ep.endpoint)}-${p.name}" onchange="upUrl('${ep.endpoint}')">
-    <option value="" disabled selected>-- Pilih --</option>${o}
+            const options = (p.options || [])
+                .map(x => `<option value="${x}">${x}</option>`)
+                .join('');
+
+            return `
+<div class="api-parameter-field-container">
+  ${labelBlock}
+  <select
+    class="api-parameter-select-input-element"
+    id="${fieldId}"
+    onchange="upUrl('${ep.endpoint}')">
+    <option value="" disabled selected>-- select option --</option>
+    ${options}
   </select>
 </div>`;
         }
-        return ` <div class="fg">
-  <div class="fl">
-    <span class="fn">${p.name}</span>
-    <span class="ft">${p.filename || "input" }</span>
-    <span class="fr">*</span>
-    <span class="fh">${p.description||''}</span>
-  </div>
-  <input type="text" class="fi" id="i-${c(ep.endpoint)}-${p.name}" value="${p.default_value||''}" placeholder="${p.placeholder||p.name}" oninput="upUrl('${ep.endpoint}')">
+
+        return `
+<div class="api-parameter-field-container">
+  ${labelBlock}
+  <input type="text"
+    class="api-parameter-text-input-element"
+    id="${fieldId}"
+    value="${p.default_value || ''}"
+    placeholder="${p.placeholder || p.name}"
+    oninput="upUrl('${ep.endpoint}')">
 </div>`;
     }).join('');
 
-    return ` <div class="ep-item" id="ep-${c(ep.endpoint)}" style="animation-delay:${d}s">
-  <div class="ep-hdr" onclick="toggleEP('ep-${c(ep.endpoint)}')">
-    <span class="mb ${mc}">${ep.method}</span>
-    <span class="ep-name">${ep.name}</span>
-    <i class="fas fa-chevron-down ep-chv"></i>
+    return `
+<div class="api-endpoint-card-container" id="endpoint-card-${endpointId}" style="animation-delay:${d}s">
+
+  <!-- HEADER -->
+  <div class="api-endpoint-card-header-section"
+       onclick="toggleEP('endpoint-card-${endpointId}')">
+
+    <span class="${methodClass}">${ep.method}</span>
+
+    <span class="api-endpoint-title-text">
+      ${ep.name}
+    </span>
+
+    <i class="fas fa-chevron-down api-endpoint-expand-icon"></i>
   </div>
-  <div class="ep-bw">
-    <div class="ep-b">
-      <div class="ep-bi">
-        <div class="ep-info">
-          <i class="fas fa-circle-info"></i>
-          <span>${ep.filename}</span>
-        </div>${params} <span class="ul">Request URL</span>
-        <div class="ub">
-          <span class="ut" id="u-${c(ep.endpoint)}">${buildURL(ep)}</span>
-          <button class="icb" onclick="cpy(document.getElementById('u-${ep.endpoint}').textContent)">
+
+  <!-- BODY -->
+  <div class="api-endpoint-card-body-wrapper">
+
+    <div class="api-endpoint-information-block">
+      <i class="fas fa-circle-info"></i>
+      <span>${ep.filename}</span>
+    </div>
+
+    <!-- PARAMETERS -->
+    <div class="api-endpoint-parameters-container">
+      ${params}
+    </div>
+
+    <!-- REQUEST URL -->
+    <div class="api-request-url-section-title">
+      Request URL
+    </div>
+
+    <div class="api-request-url-box-container">
+      <span class="api-request-url-text"
+            id="request-url-text-${endpointId}">
+        ${buildURL(ep)}
+      </span>
+
+      <button class="api-request-url-copy-button"
+        onclick="cpy(document.getElementById('request-url-text-${endpointId}').textContent)">
+        <i class="fas fa-copy"></i>
+      </button>
+    </div>
+
+    <!-- EXECUTE -->
+    <button class="api-execute-request-button"
+      id="execute-button-${endpointId}"
+      onclick="execAPI('${ep.endpoint}')">
+
+      <i class="fas fa-bolt"></i>
+      Execute Request
+    </button>
+
+    <!-- RESPONSE -->
+    <div class="api-response-container-wrapper"
+         id="response-wrapper-${endpointId}">
+
+      <div class="api-response-header-bar">
+
+        <div class="api-response-status-indicator"
+             id="response-status-${endpointId}"></div>
+
+        <span class="api-response-status-text"
+              id="response-state-${endpointId}">
+          IDLE
+        </span>
+
+        <div class="api-response-actions-right">
+          <button class="api-response-copy-button"
+            onclick="cpyR('${ep.endpoint}')">
             <i class="fas fa-copy"></i>
           </button>
         </div>
-        <button class="xbtn" id="x-${c(ep.endpoint)}" onclick="execAPI('${ep.endpoint}')">
-          <i class="fas fa-bolt"></i> Execute </button>
-        <div class="rw" id="rw-${c(ep.endpoint)}">
-          <div class="rh">
-            <div class="rd" id="rd-${c(ep.endpoint)}"></div>
-            <span class="rs" id="rs-${c(ep.endpoint)}">IDLE</span>
-            <div class="rhr">
-              <button class="icb" id="ra-${c(ep.endpoint)}" onclick="cpyR('${ep.endpoint}')">
-                <i class="fas fa-copy"></i>
-              </button>
-            </div>
-          </div>
-          <div class="rb" id="rb-${c(ep.endpoint)}">
-            <pre class="rp">// Awaiting...</pre>
-          </div>
-        </div>
+
       </div>
+
+      <div class="api-response-body-container"
+           id="response-body-${endpointId}">
+        <pre class="api-response-placeholder-text">// Awaiting response...</pre>
+      </div>
+
     </div>
+
   </div>
 </div>`;
 }
